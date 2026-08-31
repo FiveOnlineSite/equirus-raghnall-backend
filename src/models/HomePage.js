@@ -1,0 +1,26 @@
+import mongoose from "mongoose";
+
+const statisticSchema = new mongoose.Schema(
+  {
+    value: { type: Number, required: true, min: 0 },
+    suffix: { type: String, default: "", trim: true, maxlength: 10 },
+    label: { type: String, required: true, trim: true, maxlength: 80 },
+  },
+  { _id: false },
+);
+
+const homePageSchema = new mongoose.Schema(
+  {
+    key: { type: String, required: true, unique: true, default: "home" },
+    stats: {
+      type: [statisticSchema],
+      validate: {
+        validator: (stats) => stats.length === 4,
+        message: "Exactly four statistics are required.",
+      },
+    },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.models.HomePage || mongoose.model("HomePage", homePageSchema);
