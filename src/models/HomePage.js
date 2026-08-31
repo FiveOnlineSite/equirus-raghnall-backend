@@ -22,8 +22,8 @@ const homePageSchema = new mongoose.Schema(
     stats: {
       type: [statisticSchema],
       validate: {
-        validator: (stats) => stats.length === 4,
-        message: "Exactly four statistics are required.",
+        validator: (stats) => !stats?.length || stats.length === 4,
+        message: "Statistics must contain exactly four items when configured.",
       },
     },
     bottomSection: { type: bottomSectionSchema },
