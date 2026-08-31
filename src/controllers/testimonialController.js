@@ -45,7 +45,7 @@ export async function getPublicTestimonials(request, response, next) {
     const testimonials = await Testimonial.find({ isPublished: true }).sort({ displayOrder: 1, createdAt: 1 }).lean();
     response.json({
       success: true,
-      testimonials: testimonials.length >= 3 ? testimonials.map(serialize) : [],
+      testimonials: testimonials.length >= 5 ? testimonials.map(serialize) : [],
     });
   } catch (error) {
     next(error);
@@ -91,8 +91,8 @@ export async function updateTestimonial(request, response, next) {
     const existing = await Testimonial.findById(request.params.id);
     if (!existing) return response.status(404).json({ success: false, message: "Testimonial not found." });
 
-    if (existing.isPublished && !fields.isPublished && await publishedCount() <= 3) {
-      return response.status(400).json({ success: false, message: "At least three testimonials must remain published." });
+    if (existing.isPublished && !fields.isPublished && await publishedCount() <= 5) {
+      return response.status(400).json({ success: false, message: "At least five testimonials must remain published." });
     }
 
     Object.assign(existing, fields);
@@ -113,8 +113,8 @@ export async function deleteTestimonial(request, response, next) {
     const testimonial = await Testimonial.findById(request.params.id);
     if (!testimonial) return response.status(404).json({ success: false, message: "Testimonial not found." });
 
-    if (testimonial.isPublished && await publishedCount() <= 3) {
-      return response.status(400).json({ success: false, message: "At least three testimonials must remain published." });
+    if (testimonial.isPublished && await publishedCount() <= 5) {
+      return response.status(400).json({ success: false, message: "At least five testimonials must remain published." });
     }
 
     await testimonial.deleteOne();

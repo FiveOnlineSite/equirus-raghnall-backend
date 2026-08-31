@@ -9,6 +9,7 @@ import { adminBannerRouter, publicBannerRouter } from "./routes/bannerRoutes.js"
 import contactRoutes from "./routes/contactRoutes.js";
 import { adminHomePageRouter, publicHomePageRouter } from "./routes/homePageRoutes.js";
 import { adminTestimonialRouter, publicTestimonialRouter } from "./routes/testimonialRoutes.js";
+import { adminFaqRouter, publicFaqRouter } from "./routes/faqRoutes.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 import { validateOrigin } from "./middleware/validateOrigin.js";
 
@@ -46,9 +47,11 @@ export function createApp() {
   app.use("/api/admin", adminBannerRouter);
   app.use("/api/admin", adminHomePageRouter);
   app.use("/api/admin", adminTestimonialRouter);
+  app.use("/api/admin", adminFaqRouter);
   app.use("/api/banners", publicBannerRouter);
   app.use("/api/home", publicHomePageRouter);
   app.use("/api/testimonials", publicTestimonialRouter);
+  app.use("/api/faqs", publicFaqRouter);
   app.use("/api/contact", contactRoutes);
 
   app.use(notFoundHandler);
