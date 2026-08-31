@@ -9,6 +9,13 @@ const statisticSchema = new mongoose.Schema(
   { _id: false },
 );
 
+const bottomSectionSchema = new mongoose.Schema(
+  {
+    description: { type: String, required: true, trim: true, maxlength: 3000 },
+  },
+  { _id: false },
+);
+
 const homePageSchema = new mongoose.Schema(
   {
     key: { type: String, required: true, unique: true, default: "home" },
@@ -19,6 +26,7 @@ const homePageSchema = new mongoose.Schema(
         message: "Exactly four statistics are required.",
       },
     },
+    bottomSection: { type: bottomSectionSchema },
   },
   { timestamps: true },
 );

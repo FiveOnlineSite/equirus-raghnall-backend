@@ -8,8 +8,18 @@ const defaultStats = [
   { value: 300, suffix: "+", label: "Insurance Professionals" },
 ];
 
+const defaultBottomSection = {
+  description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse...",
+};
+
 function getStats(homePage) {
   return homePage?.stats?.length === 4 ? homePage.stats : defaultStats;
+}
+
+function getBottomSectionContent(homePage) {
+  return homePage?.bottomSection?.description
+    ? homePage.bottomSection
+    : defaultBottomSection;
 }
 
 export async function getHomeStats(request, response, next) {
@@ -59,6 +69,35 @@ export async function updateHomeStats(request, response, next) {
     );
 
     response.json({ success: true, stats: homePage.stats });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getBottomSection(request, response, next) {
+  try {
+    await connectDatabase();
+    const homePage = await HomePage.findOne({ key: "home" }).lean();
+    response.json({ success: true, bottomSection: getBottomSectionContent(homePage) });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateBottomSection(request, response, next) {
+  try {
+    const description = typeof request.body.description === "string" ? request.body.description.trim() : "";
+    if (!description || description.length > 3000) {
+      return response.status(400).json({ success: false, message: "Description is required." });
+    }
+
+    await connectDatabase();
+    const homePage = await HomePage.findOneAndUpdate(
+      { key: "home" },
+      { key: "home", bottomSection: { description } },
+      { new: true, upsert: true, runValidators: true },
+    );
+    response.json({ success: true, bottomSection: homePage.bottomSection });
   } catch (error) {
     next(error);
   }
