@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { createBlog, deleteBlog, getPublicBlog, listAdminBlogs, listPublicBlogs, updateBlog } from "../controllers/blogController.js";
+import { requireAdmin } from "../middleware/requireAdmin.js";
+export const publicBlogRouter = Router();
+export const adminBlogRouter = Router();
+publicBlogRouter.get("/", listPublicBlogs);
+publicBlogRouter.get("/:slug", getPublicBlog);
+adminBlogRouter.get("/blogs", requireAdmin, listAdminBlogs);
+adminBlogRouter.post("/blogs", requireAdmin, createBlog);
+adminBlogRouter.put("/blogs/:id", requireAdmin, updateBlog);
+adminBlogRouter.delete("/blogs/:id", requireAdmin, deleteBlog);

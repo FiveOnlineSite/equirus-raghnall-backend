@@ -29,15 +29,14 @@ export async function createUploadPolicy(request, response, next) {
     }
 
     const isTestimonial = page === "testimonials";
+    const isBlog = page === "blogs";
 
-    if (!isTestimonial && !isServicePage(page)) {
+    if (!isTestimonial && !isBlog && !isServicePage(page)) {
       return response.status(400).json({ success: false, message: "Invalid service page." });
     }
 
     const extension = allowedImageTypes[fileType];
-    const key = isTestimonial
-      ? `testimonials/${Date.now()}-${randomUUID()}.${extension}`
-      : `banners/${page}/${Date.now()}-${randomUUID()}.${extension}`;
+    const key = isTestimonial ? `testimonials/${Date.now()}-${randomUUID()}.${extension}` : isBlog ? `blogs/${Date.now()}-${randomUUID()}.${extension}` : `banners/${page}/${Date.now()}-${randomUUID()}.${extension}`;
     const upload = await createPresignedPost(getS3Client(), {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: key,
