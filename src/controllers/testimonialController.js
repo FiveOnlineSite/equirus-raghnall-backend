@@ -19,7 +19,6 @@ function readFields(body) {
     name: typeof body.name === "string" ? body.name.trim() : "",
     quote: typeof body.quote === "string" ? body.quote.trim() : "",
     imageKey: typeof body.imageKey === "string" ? body.imageKey.trim() : "",
-    isPublished: Boolean(body.isPublished),
   };
 }
 
@@ -35,14 +34,10 @@ function validate(fields) {
   return null;
 }
 
-async function publishedCount() {
-  return Testimonial.countDocuments({ isPublished: true });
-}
-
 export async function getPublicTestimonials(request, response, next) {
   try {
     await connectDatabase();
-    const testimonials = await Testimonial.find({ isPublished: true }).sort({ displayOrder: 1, createdAt: 1 }).lean();
+    const testimonials = await Testimonial.find().sort({ displayOrder: 1, createdAt: 1 }).lean();
     response.json({
       success: true,
       testimonials: testimonials.length >= 5 ? testimonials.map(serialize) : [],
@@ -91,10 +86,6 @@ export async function updateTestimonial(request, response, next) {
     const existing = await Testimonial.findById(request.params.id);
     if (!existing) return response.status(404).json({ success: false, message: "Testimonial not found." });
 
-    if (existing.isPublished && !fields.isPublished && await publishedCount() <= 5) {
-      return response.status(400).json({ success: false, message: "At least five testimonials must remain published." });
-    }
-
     Object.assign(existing, fields);
     await existing.save();
     response.json({ success: true, testimonial: serialize(existing) });
@@ -112,10 +103,6 @@ export async function deleteTestimonial(request, response, next) {
     await connectDatabase();
     const testimonial = await Testimonial.findById(request.params.id);
     if (!testimonial) return response.status(404).json({ success: false, message: "Testimonial not found." });
-
-    if (testimonial.isPublished && await publishedCount() <= 5) {
-      return response.status(400).json({ success: false, message: "At least five testimonials must remain published." });
-    }
 
     await testimonial.deleteOne();
     response.json({ success: true });

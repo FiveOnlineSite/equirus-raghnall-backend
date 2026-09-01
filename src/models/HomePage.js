@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const statisticSchema = new mongoose.Schema(
   {
     value: { type: Number, required: true, min: 0 },
-    suffix: { type: String, default: "", trim: true, maxlength: 10 },
+    suffix: { type: String, required: true, trim: true, maxlength: 10 },
     label: { type: String, required: true, trim: true, maxlength: 80 },
   },
   { _id: false },

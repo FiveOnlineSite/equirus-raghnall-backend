@@ -49,6 +49,7 @@ export async function updateHomeStats(request, response, next) {
     const invalid = stats.some((stat) => (
       !Number.isSafeInteger(stat.value) ||
       stat.value < 0 ||
+      !stat.suffix ||
       !stat.label ||
       stat.label.length > 80 ||
       stat.suffix.length > 10
@@ -57,7 +58,7 @@ export async function updateHomeStats(request, response, next) {
     if (invalid) {
       return response.status(400).json({
         success: false,
-        message: "Each statistic needs a non-negative whole number, a label, and a suffix of at most 10 characters.",
+        message: "Each statistic needs a non-negative whole number, a suffix of at most 10 characters, and a label.",
       });
     }
 
