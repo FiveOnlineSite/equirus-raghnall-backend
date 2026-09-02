@@ -10,7 +10,9 @@ const blogSchema = new mongoose.Schema({
   category: { type: String, required: true, trim: true, enum: ["Blogs", "Risk Reports", "Market Updates", "Case Studies"] },
   readTime: { type: String, required: true, trim: true, maxlength: 30 },
   content: { type: String, required: true, trim: true, maxlength: 20000 },
+  featuredOnHome: { type: Boolean, default: false, index: true },
 }, { timestamps: true });
 
 blogSchema.index({ createdAt: -1 });
+blogSchema.index({ featuredOnHome: 1, createdAt: -1 });
 export default mongoose.models.Blog || mongoose.model("Blog", blogSchema);
