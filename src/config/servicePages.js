@@ -30,6 +30,8 @@ const entries = [
   ["surety-bonds", "Surety Bonds"],
   ["trade-credit-insurance", "Trade Credit Insurance"],
   ["marine-hull-aviation-insurance", "Marine Hull & Aviation"],
+  ["mergers-acquisitions", "Mergers & Acquisitions"],
+  ["representation-warranties-insurance", "Representation and Warranties Insurance"],
   ["cyber-crime-insurance", "Cyber & Crime"],
   ["commercial-general-liability-insurance", "Commercial General Liability"],
   ["professional-indemnity-insurance", "Professional Indemnity"],
@@ -45,6 +47,12 @@ const entries = [
   ["contingent-liability-insurance", "Contingent Liability Insurance"],
   ["specific-litigation-risk", "Specific Litigation Risk"],
   ["transactional-risk-covers", "Transactional Risk Covers"],
+  ["aviation-insurance", "Aviation Insurance"],
+  ["liability-financial-lines", "Liability & Financial Lines"],
+  ["parametric-insurance", "Parametric Insurance"],
+  ["risk-analytics", "Risk Analytics"],
+  ["terrorism-political-violance", "Terrorism and Political Violance"],
+  ["treaties", "Treaties"],
 ];
 
 export const servicePages = new Map(entries);
