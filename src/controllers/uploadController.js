@@ -12,7 +12,7 @@ const allowedImageTypes = {
 
 export async function createUploadPolicy(request, response, next) {
   try {
-    const { fileType, fileSize, page } = request.body;
+    const { fileType, fileSize, page, assetType } = request.body;
 
     if (!allowedImageTypes[fileType]) {
       return response.status(400).json({
@@ -30,13 +30,18 @@ export async function createUploadPolicy(request, response, next) {
 
     const isTestimonial = page === "testimonials";
     const isBlog = page === "blogs";
+    const isServiceLogo = assetType === "service-logo" && isServicePage(page);
 
-    if (!isTestimonial && !isBlog && !isServicePage(page)) {
+    if (!isTestimonial && !isBlog && !isServiceLogo) {
       return response.status(400).json({ success: false, message: "Invalid service page." });
     }
 
     const extension = allowedImageTypes[fileType];
-    const key = isTestimonial ? `testimonials/${Date.now()}-${randomUUID()}.${extension}` : isBlog ? `blogs/${Date.now()}-${randomUUID()}.${extension}` : `banners/${page}/${Date.now()}-${randomUUID()}.${extension}`;
+    const key = isTestimonial
+      ? `testimonials/${Date.now()}-${randomUUID()}.${extension}`
+      : isBlog
+        ? `blogs/${Date.now()}-${randomUUID()}.${extension}`
+        : `service-logos/${page}/${Date.now()}-${randomUUID()}.${extension}`;
     const upload = await createPresignedPost(getS3Client(), {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: key,

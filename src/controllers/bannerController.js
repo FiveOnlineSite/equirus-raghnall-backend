@@ -15,12 +15,12 @@ function serializeBanner(banner) {
   if (!banner) return null;
 
   const cdnUrl = (process.env.AWS_CDN_URL || "").replace(/\/$/, "");
-  const imageKey = banner.imageKey || "";
+  const logoKey = banner.logoKey || "";
 
   return {
     ...banner.toObject(),
-    imageKey,
-    imageUrl: imageKey && cdnUrl ? `${cdnUrl}/${imageKey.replace(/^\//, "")}` : "",
+    logoKey,
+    logoUrl: logoKey && cdnUrl ? `${cdnUrl}/${logoKey.replace(/^\//, "")}` : "",
     altText: banner.altText || "",
   };
 }
@@ -45,25 +45,25 @@ export async function updateBanner(request, response, next) {
   try {
     if (!validatePage(request, response)) return;
 
-    const imageKey = typeof request.body.imageKey === "string"
-      ? request.body.imageKey.trim()
+    const logoKey = typeof request.body.logoKey === "string"
+      ? request.body.logoKey.trim()
       : "";
     const altText = typeof request.body.altText === "string"
       ? request.body.altText.trim().slice(0, 300)
       : "";
-    const expectedPrefix = `banners/${request.params.page}/`;
+    const expectedPrefix = `service-logos/${request.params.page}/`;
 
-    if (!imageKey || !imageKey.startsWith(expectedPrefix)) {
+    if (!logoKey || !logoKey.startsWith(expectedPrefix)) {
       return response.status(400).json({
         success: false,
-        message: "A valid banner image key is required.",
+        message: "A valid service logo key is required.",
       });
     }
 
     await connectDatabase();
     const banner = await Banner.findOneAndUpdate(
       { page: request.params.page },
-      { page: request.params.page, imageKey, altText },
+      { page: request.params.page, logoKey, altText },
       { new: true, upsert: true, runValidators: true },
     );
 

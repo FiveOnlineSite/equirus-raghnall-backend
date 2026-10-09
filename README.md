@@ -6,9 +6,9 @@ Standalone Express API extracted from the Raghnall Next.js application. The exis
 
 - MongoDB Atlas connection with retry after failed attempts
 - Admin login/logout/session using an HttpOnly JWT cookie
-- Protected banner management endpoints
+- Protected per-service center-logo management endpoints
 - S3 presigned POST uploads with MIME and 10 MB size enforcement
-- Public CloudFront-backed banner responses
+- Public CloudFront-backed service-logo responses
 - Contact email endpoint
 - Explicit CORS/origin allowlist, security headers and rate limiting
 - Render health endpoint and Blueprint
